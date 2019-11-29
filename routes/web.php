@@ -17,14 +17,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 $router->get('/', function () use ($router) {
-	return $router->app->version();
+	return response()->json([
+        'result'		=> 0,
+        'messageCode'   => 'No route found'
+    ], 404);
 });
 
-$router->post('auth/login', 
-	[
-	   'uses' => 'AuthController@authenticate'
-	]
-);
+$router->post('jwt/generateToken', ['uses' => 'JwtController@generate']);
 
 $router->group(
 	['middleware' => 'jwt.auth'], 
