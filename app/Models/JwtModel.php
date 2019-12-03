@@ -24,10 +24,4 @@ class JwtModel extends Model implements AuthenticatableContract, AuthorizableCon
     protected $fillable = [
         'email', 'token'
     ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
 }
