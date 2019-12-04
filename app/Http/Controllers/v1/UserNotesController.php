@@ -10,7 +10,21 @@ use Illuminate\Support\Facades\Validator;
 class UserNotesController extends Controller
 {
     public function index() {
-        return response()->json(['result' => 'ok',]);
+        try {
+            $notes = UserNotes::orderBy('id', 'ASC')->get();
+            return response()->json([
+                'result'		=> 1,
+                'data'          => $notes,
+                'message'		=> 'Data successfully retrieved',
+            ],200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'result'		=> 0,
+                'reason'        => $e,
+                'message'		=> 'Data fail to retrieved',
+            ],200);
+        }
+        
     }
 
     public function store(Request $request) {
