@@ -142,7 +142,7 @@ class UserNotesController extends Controller
             $status     = 1;
             $dueDate    = null;
         }elseif($type == 2) {
-            $status     = 0;
+            $status     = 2;
             $dueDate    = strip_tags($request->due_date);
         }else {
             $status     = 1;
