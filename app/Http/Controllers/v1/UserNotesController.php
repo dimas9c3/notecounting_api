@@ -27,13 +27,13 @@ class UserNotesController extends Controller
             $data = array();
             foreach ($notes as $note) {
                 $description = strip_tags($note->description);
-                if (strlen($description) > 50) {
-                    $stringCut  = substr($description, 0, 50);
-                    $endPoint   = strrpos($stringCut, ' ');
+                // if (strlen($description) > 50) {
+                //     $stringCut  = substr($description, 0, 50);
+                //     $endPoint   = strrpos($stringCut, ' ');
 
-                    $description = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
-                    $description .= '...';
-                }
+                //     $description = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+                //     $description .= '...';
+                // }
 
                 switch ($note->label) {
                     case 1:
