@@ -9,12 +9,100 @@ use Illuminate\Support\Facades\Validator;
 
 class UserNotesController extends Controller
 {
-    public function index() {
+    public function getByEmail(Request $request) {
+        $email          = strip_tags($request->email);
+
+        if(empty($email)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Email parameter required',
+            ],200);
+        }
+
         try {
-            $notes = UserNotes::orderBy('id', 'ASC')->get();
+            $notes = UserNotes::where('email', $email)
+            ->orderBy('id', 'ASC')
+            ->get();
+
+            $data = array();
+            foreach ($notes as $note) {
+                $description = strip_tags($note->description);
+                if (strlen($description) > 50) {
+                    $stringCut  = substr($description, 0, 50);
+                    $endPoint   = strrpos($stringCut, ' ');
+
+                    $description = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+                    $description .= '...';
+                }
+
+                switch ($note->label) {
+                    case 1:
+                        $label = 'Personal';
+                    break;
+                    case 2:
+                        $label = 'Work';
+                    break;
+                    case 3:
+                        $label = 'Events';
+                    break;
+                    case 4:
+                        $label = 'Friends';
+                    case 5:
+                        $label = 'Others';
+                    break;
+                    default:
+                        $label = 'Others';
+                    break;
+                }
+
+                switch ($note->type) {
+                    case 1:
+                        $type = 'Regular';
+                    break;
+                    case 2:
+                        $type = 'Deadline';
+                    break;
+                    default:
+                        $type = 'Regular';
+                    break;
+                }
+
+                switch ($note->status) {
+                    case 1:
+                        $status = 'Completed';
+                    break;
+                    case 2:
+                        $status = 'OnProgress';
+                    break;
+                    case 3: 
+                        $status = 'Pending';
+                    break;
+                    default:
+                        $status = 'Completed';
+                    break;
+                }
+
+                if(empty($note->due_date)) {
+                    $dueDate = null;
+                }else {
+                    $dueDate = date('d-M-Y', strtotime($note->due_date));
+                }
+
+                array_push($data, [
+                    'id'            => $note->id,
+                    'title'         => $note->title,
+                    'description'   => $description,
+                    'label'         => $label,
+                    'type'          => $type,
+                    'status'        => $status,
+                    'due_date'      => $dueDate,
+                    'created_at'    => date('d-M-Y', strtotime($note->created_at)),
+                ]);
+            }
+
             return response()->json([
                 'result'		=> 1,
-                'data'          => $notes,
+                'data'          => $data,
                 'message'		=> 'Data successfully retrieved',
             ],200);
         } catch (\Exception $e) {

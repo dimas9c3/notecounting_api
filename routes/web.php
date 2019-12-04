@@ -28,9 +28,9 @@ $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
             // USER NOTES SECTION
             $router->group(['prefix' => 'usernotes'], function() use ($router) {
                 // GET SECTION
-                $router->get('/', [
-                    'uses'  => 'UserNotesController@index', 
-                    'as'    => 'usernotes.index',
+                $router->post('/getByEmail', [
+                    'uses'  => 'UserNotesController@getByEmail', 
+                    'as'    => 'usernotes.getByEmail',
                 ]);
 
                 $router->post('/store', [
