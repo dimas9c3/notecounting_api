@@ -9,6 +9,8 @@ class UserNotes extends Model
 {
     public $timestamps = true;
 
+    use SoftDeletes;
+
     protected $table = 'tb_user_notes';
 
     protected $dates = ['deleted_at'];

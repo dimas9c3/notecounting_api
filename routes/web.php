@@ -27,7 +27,7 @@ $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
 
             // USER NOTES SECTION
             $router->group(['prefix' => 'usernotes'], function() use ($router) {
-                // GET SECTION
+                
                 $router->post('/getByEmail', [
                     'uses'  => 'UserNotesController@getByEmail', 
                     'as'    => 'usernotes.getByEmail',
@@ -37,6 +37,12 @@ $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
                     'uses'  => 'UserNotesController@store',
                     'as'    => 'usernotes.store',
                 ]);
+
+                $router->get('/delete/{id}', [
+                    'uses'  => 'UserNotesController@destroy',
+                    'as'    => 'usernotes.delete',
+                ]);
+                
             });
 
         });

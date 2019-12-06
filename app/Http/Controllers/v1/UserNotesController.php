@@ -173,4 +173,30 @@ class UserNotesController extends Controller
             ], 200);
         }			
     }
+
+    public function destroy($id) {
+        $id          = strip_tags($id);
+
+        if(empty($id)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Id notes parameter required',
+            ],200);
+        }
+
+        try {
+            $deletedNotes = UserNotes::where('id', $id)->delete();
+
+            return response()->json([
+                'result'		=> 1,
+                'message'		=> 'Data successfully deleted',
+            ],200);            
+        } catch (\Exception $e) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Data fail to deleted',
+                'reason'        => $e,
+            ],200);
+        }
+    }
 }
