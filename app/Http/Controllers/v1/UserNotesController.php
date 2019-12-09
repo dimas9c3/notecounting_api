@@ -85,7 +85,7 @@ class UserNotesController extends Controller
                 if(empty($note->due_date)) {
                     $dueDate = null;
                 }else {
-                    $dueDate = date('d-M-Y', strtotime($note->due_date));
+                    $dueDate = date('d-m-Y', strtotime($note->due_date));
                 }
 
                 array_push($data, [
