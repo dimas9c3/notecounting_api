@@ -96,7 +96,7 @@ class UserNotesController extends Controller
                     'type'          => $type,
                     'status'        => $status,
                     'due_date'      => $dueDate,
-                    'created_at'    => date('d-M-Y', strtotime($note->created_at)),
+                    'created_at'    => date('Y-m-d', strtotime($note->created_at)),
                 ]);
             }
 
