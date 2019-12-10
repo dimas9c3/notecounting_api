@@ -115,6 +115,15 @@ class UserNotesController extends Controller
     }
 
     public function store(Request $request) {
+        $email          = strip_tags($request->email);
+
+        if(empty($email)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Email parameter required',
+            ],200);
+        }
+        
         $validator = Validator::make($request->all(), [
             'title'                 => 'required|min:4',
             'description'           => 'required|min:6',
