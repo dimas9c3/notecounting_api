@@ -47,6 +47,7 @@ class UserNotesController extends Controller
                     break;
                     case 4:
                         $label = 'Friends';
+                    break;
                     case 5:
                         $label = 'Others';
                     break;
@@ -123,7 +124,7 @@ class UserNotesController extends Controller
                 'message'		=> 'Email parameter required',
             ],200);
         }
-        
+
         $validator = Validator::make($request->all(), [
             'title'                 => 'required|min:4',
             'description'           => 'required|min:6',
