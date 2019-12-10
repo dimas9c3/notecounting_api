@@ -74,6 +74,10 @@ class UserNotesController extends Controller
                     break;
                     case 2:
                         $status = 'OnProgress';
+
+                        if ($note->due_date <= date('Y-m-d')) {
+                            $status = 'Overdate';
+                        }
                     break;
                     case 3: 
                         $status = 'Pending';
@@ -268,6 +272,47 @@ class UserNotesController extends Controller
                 'message'		=> 'Data successfully updated',
             ],200);
             
+        } catch (\Exception $e) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Data fail to updated',
+                'reason'		=> $e->getMessage(),
+            ], 200);
+        }
+    }
+
+    public function changeNoteStatus($action, $noteId) {
+
+        if(empty($action || $noteId)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Note id or action parameter required',
+            ],200);
+        }
+
+        switch ($action) {
+            case 'complete':
+                $notes = array(
+                    'status'    => 1
+                );
+            break;
+            
+            default:
+                return response()->json([
+                    'result'		=> 0,
+                    'message'		=> 'Unknown action parameter',
+                ],200);
+            break;
+        }
+
+        try {
+            UserNotes::where('id', $noteId)
+            ->update($notes);
+
+            return response()->json([
+                'result'		=> 1,
+                'message'		=> 'Data successfully changed',
+            ],200);
         } catch (\Exception $e) {
             return response()->json([
                 'result'		=> 0,

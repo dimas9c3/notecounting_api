@@ -47,6 +47,11 @@ $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
                     'uses'  => 'UserNotesController@update',
                     'as'    => 'usernotes.update',
                 ]);
+
+                $router->get('/changeNoteStatus/{action}/{id}', [
+                    'uses'  => 'UserNotesController@changeNoteStatus',
+                    'as'    => 'usernotes.changeNoteStatus',
+                ]);
                 
             });
 
