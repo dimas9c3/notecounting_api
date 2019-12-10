@@ -33,6 +33,11 @@ $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
                     'as'    => 'usernotes.getByEmail',
                 ]);
 
+                $router->post('/countNotesWithStatusByEmail', [
+                    'uses'  => 'UserNotesController@countNotesWithStatusByEmail',
+                    'as'    => 'usernotes.countNotesWithStatusByEmail',
+                ]);
+
                 $router->post('/store', [
                     'uses'  => 'UserNotesController@store',
                     'as'    => 'usernotes.store',

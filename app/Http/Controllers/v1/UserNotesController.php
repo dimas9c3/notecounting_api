@@ -119,6 +119,66 @@ class UserNotesController extends Controller
         }
     }
 
+    public function countNotesWithStatusByEmail(Request $request) {
+        $email          = strip_tags($request->email);
+
+        if(empty($email)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Email parameter required',
+            ],200);
+        }
+
+        try {
+            $notes = UserNotes::where('email', $email)
+            ->orderBy('id', 'ASC')
+            ->get();
+
+            $complete       = 0;
+            $onProgress     = 0;
+            $overDate       = 0;
+            foreach ($notes as $note) {
+
+                switch ($note->status) {
+                    case 1:
+                        $complete++;
+                    break;
+                    case 2:
+                        if ($note->due_date <= date('Y-m-d')) {
+                            $overDate++;
+                        }else {
+                            $onProgress++;
+                        }
+                    break;
+                    case 3: 
+                       
+                    break;
+                    default:
+                        $complete++;
+                    break;
+                }
+            }
+
+            $data = array(
+                'onprogress'    => $onProgress,
+                'overdate'      => $overDate,
+                'complete'      => $complete,
+            );
+
+            return response()->json([
+                'result'		=> 1,
+                'data'          => $data,
+                'message'		=> 'Data successfully retrieved',
+            ],200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'result'		=> 0,
+                'reason'        => $e,
+                'message'		=> 'Data fail to retrieved',
+            ],200);
+        }
+    }
+
     public function store(Request $request) {
         $email          = strip_tags($request->email);
 
