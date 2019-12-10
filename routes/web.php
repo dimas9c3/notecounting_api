@@ -42,6 +42,11 @@ $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
                     'uses'  => 'UserNotesController@destroy',
                     'as'    => 'usernotes.delete',
                 ]);
+
+                $router->post('/update', [
+                    'uses'  => 'UserNotesController@update',
+                    'as'    => 'usernotes.update',
+                ]);
                 
             });
 

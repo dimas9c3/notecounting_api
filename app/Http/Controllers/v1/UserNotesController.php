@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\v1;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\UserNotes;
-use Illuminate\Support\Facades\Validator;
 
 class UserNotesController extends Controller
 {
@@ -112,7 +112,6 @@ class UserNotesController extends Controller
                 'message'		=> 'Data fail to retrieved',
             ],200);
         }
-        
     }
 
     public function store(Request $request) {
@@ -197,6 +196,74 @@ class UserNotesController extends Controller
                 'message'		=> 'Data fail to deleted',
                 'reason'        => $e,
             ],200);
+        }
+    }
+
+    public function update(Request $request) {
+        $noteId          = strip_tags($request->noteId);
+
+        if(empty($noteId)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Note id parameter required',
+            ],200);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title'                 => 'required|min:4',
+            'description'           => 'required|min:6',
+            'label' 				=> 'required',
+            'type'                  => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $err = array();
+            foreach ($validator->errors()->toArray() as $key => $error)  {
+                array_push($err, ['code' => $key, 'message' => $error[0]]);
+            }
+
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'User input validation not valid',
+                'reason'		=> $err,
+            ], 200);
+        }
+
+        $type       = strip_tags($request->type);
+
+        if($type == 1) {
+            $status     = 1;
+            $dueDate    = null;
+        }elseif($type == 2) {
+            $status     = 2;
+            $dueDate    = strip_tags($request->due_date);
+        }else {
+            $status     = 1;
+            $dueDate    = null;
+        }
+
+        try {
+            UserNotes::where('id', $noteId)
+            ->update([
+                'title' 	    => strip_tags($request->title),
+                'description'   => strip_tags($request->description),
+                'label'         => strip_tags($request->label),
+                'type'          => $type,
+                'status'        => $status,
+                'due_date'      => $dueDate,
+            ]);
+
+            return response()->json([
+                'result'		=> 1,
+                'message'		=> 'Data successfully updated',
+            ],200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'Data fail to updated',
+                'reason'		=> $e->getMessage(),
+            ], 200);
         }
     }
 }
