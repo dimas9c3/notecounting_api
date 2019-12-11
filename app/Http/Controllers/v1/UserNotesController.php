@@ -159,11 +159,13 @@ class UserNotesController extends Controller
                 }
             }
 
-            $data = array(
+            $data = array();
+
+            array_push($data, [
                 'onprogress'    => $onProgress,
                 'overdate'      => $overDate,
                 'complete'      => $complete,
-            );
+            ]);
 
             return response()->json([
                 'result'		=> 1,
