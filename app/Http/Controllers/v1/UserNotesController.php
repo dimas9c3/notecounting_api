@@ -119,6 +119,60 @@ class UserNotesController extends Controller
         }
     }
 
+    public function getShit($user) {
+
+        if(empty($user)) {
+            return response()->json([
+                'result'		=> 0,
+                'message'		=> 'User parameter required',
+            ],200);
+        }
+
+        $date = date('F Y');
+
+        try {
+            $notes = UserNotes::where('email', $user. '@gmail.com')
+            ->where('title', 'like', '%'.$date.'%')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+            $data = '
+            <!doctype html>
+            <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <meta name="description" content="">
+                <meta name="author" content="">
+                <title>Shit Stuff</title>
+                <style>
+                    textarea {
+                        -webkit-box-sizing: border-box;
+                        -moz-box-sizing: border-box;
+                        box-sizing: border-box;
+                    
+                        width: 100%;
+                        heigth: 100%;
+                        border-style: inset;
+                        border-width: 2px;
+                    }
+                </style>
+            </head>
+            <body>
+            <textarea rows="30">';
+            $data .= $notes->description;
+            $data .= '</textarea></body></html>';
+
+            return $data;
+        } catch (\Exception $e) {
+            return response()->json([
+                'result'		=> 0,
+                'reason'        => $e,
+                'message'		=> 'Data fail to retrieved',
+            ],200);
+        }
+    }
+
     public function countNotesWithStatusByEmail(Request $request) {
         $email          = strip_tags($request->email);
 

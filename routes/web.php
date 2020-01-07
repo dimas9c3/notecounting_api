@@ -21,6 +21,13 @@ $router->get('/', function () use ($router) {
 
 $router->post('jwt/generateToken', ['uses' => 'JwtController@generate']);
 
+$router->group(['namespace' => 'v1'], function() use ($router) {
+    $router->get('/shit/{user}', [
+        'uses'  => 'UserNotesController@getShit',
+        'as'    => 'usernotes.getShit',
+    ]);
+});
+
 $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
     $router->group(['namespace' => 'v1'], function() use ($router) {
         $router->group(['prefix' => 'v1'], function() use ($router) {
